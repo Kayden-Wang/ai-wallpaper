@@ -70,14 +70,52 @@ export default function Input({ onAddWallpaper }: InputProps) {
   };
 
   return (
+    // container: 容器类
+    // mx-auto: 水平居中
+    // px-4: 左右内边距1rem
+    // my-12: 上下外边距3rem
     <div className="container mx-auto px-4 my-12">
+      {/* max-w-5xl: 最大宽度64rem
+          mx-auto: 水平居中
+          bg-gradient-to-br: 背景渐变从左上到右下
+          from-white/80: 渐变起始色为白色,透明度80%
+          to-white/50: 渐变结束色为白色,透明度50%
+          backdrop-blur-xl: 背景模糊效果
+          rounded-2xl: 圆角1rem
+          shadow-lg: 大阴影
+          p-8: 内边距2rem
+          border: 边框
+          border-white/20: 边框颜色为白色,透明度20% */}
       <div
         className="max-w-5xl mx-auto bg-gradient-to-br from-white/80 to-white/50 dark:from-gray-800/80 dark:to-gray-900/50 
                       backdrop-blur-xl rounded-2xl shadow-lg p-8 
                       border border-white/20 dark:border-gray-700/30"
       >
+        {/* flex: 弹性布局
+            flex-col: 垂直方向排列
+            gap-6: 子元素间距1.5rem */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          {/* relative: 相对定位
+              flex: 弹性布局
+              gap-4: 子元素间距1rem */}
           <div className="relative flex gap-4">
+            {/* flex-1: 弹性增长系数1
+                px-6: 左右内边距1.5rem
+                py-4: 上下内边距1rem
+                bg-white/70: 白色背景,透明度70%
+                border-2: 2px边框
+                border-gray-200: 边框颜色
+                rounded-xl: 圆角0.75rem
+                focus:ring-4: 聚焦时环形轮廓4px
+                focus:ring-blue-500/20: 聚焦时环形轮廓颜色
+                outline-none: 移除默认轮廓
+                transition-all: 所有属性过渡
+                duration-300: 过渡持续时间300ms
+                ease-in-out: 过渡时间曲线
+                text-lg: 文字大小1.125rem
+                placeholder:text-gray-400: 占位符文字颜色
+                shadow-sm: 小阴影
+                hover:shadow-md: 悬停时中等阴影 */}
             <input
               type="text"
               placeholder="输入您想要的壁纸主题..."
@@ -93,6 +131,24 @@ export default function Input({ onAddWallpaper }: InputProps) {
               onChange={(e) => setDescription(e.target.value)}
             />
 
+            {/* px-8: 左右内边距2rem
+                py-4: 上下内边距1rem
+                bg-gradient-to-r: 背景渐变从左到右
+                from-blue-500: 渐变起始色
+                to-indigo-500: 渐变结束色
+                hover:from-blue-600: 悬停时起始色
+                hover:to-indigo-600: 悬停时结束色
+                text-white: 白色文字
+                font-semibold: 字体粗细600
+                text-lg: 文字大小1.125rem
+                rounded-xl: 圆角0.75rem
+                transition-all: 所有属性过渡
+                shadow-md: 中等阴影
+                hover:shadow-xl: 悬停时大阴影
+                hover:scale-105: 悬停时放大1.05倍
+                disabled:opacity-70: 禁用时透明度70%
+                disabled:cursor-not-allowed: 禁用时鼠标样式
+                disabled:hover:scale-100: 禁用时悬停不放大 */}
             <button
               type="submit"
               className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-500 
@@ -105,7 +161,13 @@ export default function Input({ onAddWallpaper }: InputProps) {
               disabled={loading}
             >
               {loading ? (
+                // flex: 弹性布局
+                // items-center: 垂直居中对齐
+                // gap-2: 子元素间距0.5rem
                 <span className="flex items-center gap-2">
+                  {/* animate-spin: 旋转动画
+                      h-5: 高度1.25rem
+                      w-5: 宽度1.25rem */}
                   <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                     <circle
                       className="opacity-25"
@@ -130,6 +192,8 @@ export default function Input({ onAddWallpaper }: InputProps) {
             </button>
           </div>
 
+          {/* text-sm: 文字大小0.875rem
+              text-gray-500: 文字颜色 */}
           <p className="text-sm text-gray-500 dark:text-gray-400">
             💡
             提示：尝试描述具体的场景（如"日落时分的海滩"）、艺术风格（如"赛博朋克城市"）或情感氛围（如"宁静的森林"）
