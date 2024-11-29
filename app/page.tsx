@@ -6,11 +6,26 @@ import Header from "./components/sections/header";
 
 export default function Home() {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <Hero />
-      <WallpaperSection initialWallpapers={[]} />
+      <main className="flex-1 pt-20">
+        <Hero />
+        <WallpaperSection initialWallpapers={[]} />
+      </main>
       <Footer />
     </div>
   );
 }
+
+// original UI
+
+// export default function Home() {
+//   return (
+//     <div>
+//       <Header />
+//       <Hero />
+//       <WallpaperSection initialWallpapers={[]} />
+//       <Footer />
+//     </div>
+//   );
+// }
