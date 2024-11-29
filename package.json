@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.26.0",
     "https-proxy-agent": "^7.0.5",
     "next": "15.0.3",
     "openai": "^4.73.1",

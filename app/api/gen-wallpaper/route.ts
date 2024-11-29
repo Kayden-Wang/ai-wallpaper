@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getOpenAIClient } from "@/app/service/openai";
+import { AzureStorageService } from "@/app/service/azure-storage";
 
 // 定义 POST 请求处理函数
 export async function POST(req: Request) {
@@ -30,16 +31,40 @@ export async function POST(req: Request) {
     });
     console.log("图片生成成功:", result);
 
+    // 测试 Azure 连接
+    const azureStorage = new AzureStorageService();
+    console.log("测试 Azure Storage 连接...");
+    const connectionTest = await azureStorage.testConnection();
+    if (!connectionTest) {
+      throw new Error("Azure Storage connection test failed");
+    }
+
+    // 生成文件名
+    const fileName = `wallpaper-${Date.now()}.png`;
+    console.log("准备上传文件:", fileName);
+
+    // 确保 URL 存在
+    if (!result.data[0]?.url) {
+      throw new Error("OpenAI didn't return an image URL");
+    }
+
+    // 上传到 Azure
+    console.log("开始上传到 Azure Storage...");
+    const azureUrl = await azureStorage.uploadImageFromUrl(
+      result.data[0].url,
+      fileName
+    );
+
     return NextResponse.json({
       code: 200,
       message: "ok",
       data: {
-        description: description,
-        img_url: result.data[0].url,
+        description,
+        img_url: azureUrl,
       },
     });
   } catch (error: any) {
-    console.error("详细错误信息:", {
+    console.error("操作失败:", {
       message: error.message,
       stack: error.stack,
       cause: error.cause,
