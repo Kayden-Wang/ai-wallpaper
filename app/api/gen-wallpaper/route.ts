@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getOpenAIClient } from "@/app/service/openai";
 import { AzureStorageService } from "@/app/service/azure-storage";
+import { SupabaseService } from "@/app/service/supabase";
 
 // 定义 POST 请求处理函数
 export async function POST(req: Request) {
@@ -55,13 +56,27 @@ export async function POST(req: Request) {
       fileName
     );
 
+    // 保存到数据库
+    const wallpaperData = {
+      description,
+      img_url: azureUrl,
+      img_size: "1792x1024",
+      model_parameters: {
+        model: "dall-e-3",
+        quality: "hd",
+        size: "1792x1024",
+        style: "natural",
+        prompt: `生成一张桌面壁纸，主题为: ${description}, 印象派风格，受莫奈《睡莲》启发`,
+      },
+      user_email: "default@example.com", // 后续可以从用户会话中获取
+    };
+
+    const savedWallpaper = await SupabaseService.insertWallpaper(wallpaperData);
+
     return NextResponse.json({
       code: 200,
       message: "ok",
-      data: {
-        description,
-        img_url: azureUrl,
-      },
+      data: savedWallpaper,
     });
   } catch (error: any) {
     console.error("操作失败:", {

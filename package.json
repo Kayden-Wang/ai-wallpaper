@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@azure/storage-blob": "^12.26.0",
+    "@supabase/supabase-js": "^2.46.2",
     "https-proxy-agent": "^7.0.5",
     "next": "15.0.3",
     "openai": "^4.73.1",
+    "pg": "^8.13.1",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106"
   },
