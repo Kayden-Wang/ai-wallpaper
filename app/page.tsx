@@ -10,7 +10,7 @@ export default function Home() {
       <Header />
       <main className="flex-1 pt-20">
         <Hero />
-        <WallpaperSection initialWallpapers={[]} />
+        <WallpaperSection />
       </main>
       <Footer />
     </div>
