@@ -1,3 +1,4 @@
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { getOpenAIClient } from "@/app/service/openai";
 import { AzureStorageService } from "@/app/service/azure-storage";
@@ -5,6 +6,15 @@ import { SupabaseService } from "@/app/service/supabase";
 
 // 定义 POST 请求处理函数
 export async function POST(req: Request) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json(
+      { code: 401, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
   try {
     console.log("开始处理请求...");
     const { description } = await req.json();
@@ -56,7 +66,19 @@ export async function POST(req: Request) {
       fileName
     );
 
-    // 保存到数据库
+    // 获取 Clerk 用户信息
+    const user = await currentUser();
+
+    // 准备用户数据
+    const userData = {
+      email: user?.emailAddresses[0]?.emailAddress || "",
+      nickname: user?.firstName || user?.username || "用户",
+      avatar_url:
+        user?.imageUrl ||
+        `https://api.dicebear.com/7.x/personas/svg?seed=${userId}`,
+    };
+
+    // 修改保存壁纸的逻辑
     const wallpaperData = {
       description,
       img_url: azureUrl,
@@ -68,6 +90,8 @@ export async function POST(req: Request) {
         style: "natural",
         prompt: `生成一张桌面壁纸，主题为: ${description}, 印象派风格，受莫奈《睡莲》启发`,
       },
+      user_id: userId, // 添加用户ID
+      user: userData, // 添加用户信息
     };
 
     const savedWallpaper = await SupabaseService.insertWallpaper(wallpaperData);

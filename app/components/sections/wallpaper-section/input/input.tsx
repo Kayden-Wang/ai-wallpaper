@@ -2,6 +2,7 @@
 
 import { Wallpaper } from "@/app/types/wallpaper";
 import { useState } from "react";
+import { useAuth, SignInButton } from "@clerk/nextjs";
 
 interface InputProps {
   onAddWallpaper: (newWallpaper: Wallpaper) => Promise<void>;
@@ -13,6 +14,7 @@ interface InputProps {
  * 使用 useState 管理输入状态和加载状态
  */
 export default function Input({ onAddWallpaper }: InputProps) {
+  const { isSignedIn } = useAuth();
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -36,6 +38,13 @@ export default function Input({ onAddWallpaper }: InputProps) {
     // 添加输入验证
     if (!description.trim()) {
       alert("请输入壁纸主题");
+      return;
+    }
+
+    if (!isSignedIn) {
+      // 使用 SignInButton 的引用来触发登录
+      const signInButton = document.getElementById("wallpaper-signin-button");
+      signInButton?.click();
       return;
     }
 
@@ -135,6 +144,13 @@ export default function Input({ onAddWallpaper }: InputProps) {
               disabled={loading}
               onChange={(e) => setDescription(e.target.value)}
             />
+
+            {/* 隐藏的登录按钮 */}
+            <div className="hidden">
+              <SignInButton mode="modal">
+                <button id="wallpaper-signin-button">登录</button>
+              </SignInButton>
+            </div>
 
             {/* px-8: 左右内边距2rem
                 py-4: 上下内边距1rem

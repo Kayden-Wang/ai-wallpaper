@@ -1,3 +1,5 @@
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+
 export default function Header() {
   return (
     <div className="fixed top-0 left-0 right-0 w-full z-50">
@@ -18,33 +20,29 @@ export default function Header() {
 
             {/* 导航按钮区域 */}
             <div className="flex items-center gap-4">
-              {/* 主题切换按钮 */}
-              <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                  />
-                </svg>
-              </button>
-
-              {/* 用户头像/登录按钮 */}
-              <button
-                className="flex items-center gap-2 px-4 py-2 
-                           bg-gradient-to-r from-blue-500 to-indigo-500 
-                           hover:from-blue-600 hover:to-indigo-600
-                           text-white font-semibold rounded-lg 
-                           transition-all hover:shadow-lg hover:scale-105"
-              >
-                登录
-              </button>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button
+                    className="flex items-center gap-2 px-4 py-2 
+                               bg-gradient-to-r from-blue-500 to-indigo-500 
+                               hover:from-blue-600 hover:to-indigo-600
+                               text-white font-semibold rounded-lg 
+                               transition-all hover:shadow-lg hover:scale-105"
+                  >
+                    登录
+                  </button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <UserButton
+                  afterSignOutUrl="/"
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-12 h-12",
+                    },
+                  }}
+                />
+              </SignedIn>
             </div>
           </div>
         </div>

@@ -61,21 +61,52 @@ export class SupabaseService {
     return data || [];
   }
 
-  // 插入新壁纸
+  // 修改插入壁纸的方法
   static async insertWallpaper(wallpaper: Wallpaper): Promise<Wallpaper> {
-    // 获取默认用户
-    const defaultUser = await this.getOrCreateDefaultUser();
+    if (!wallpaper.user) {
+      throw new Error("User information is required");
+    }
 
+    // 首先确保用户存在
+    const { data: existingUser, error: userError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", wallpaper.user.email)
+      .single();
+
+    let userId = existingUser?.id;
+
+    if (!existingUser) {
+      // 如果用户不存在，创建新用户
+      const { data: newUser, error: insertError } = await supabase
+        .from("users")
+        .insert([wallpaper.user])
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error("创建用户失败:", insertError);
+        throw insertError;
+      }
+
+      userId = newUser.id;
+    }
+
+    // 插入壁纸数据，移除 user 字段
+    const wallpaperToInsert = {
+      description: wallpaper.description,
+      img_url: wallpaper.img_url,
+      img_size: wallpaper.img_size,
+      model_used: wallpaper.model_used || "dall-e-3",
+      model_parameters: wallpaper.model_parameters,
+      user_id: userId,
+      created_at: new Date().toISOString(),
+    };
+
+    // 插入壁纸数据
     const { data, error } = await supabase
       .from("wallpapers")
-      .insert([
-        {
-          ...wallpaper,
-          user_id: defaultUser.id,
-          model_used: wallpaper.model_used || "dall-e-3",
-          created_at: new Date().toISOString(),
-        },
-      ])
+      .insert([wallpaperToInsert])
       .select(
         `
         *,
