@@ -35,15 +35,16 @@ export default function Input({ onAddWallpaper }: InputProps) {
     // 阻止表单默认提交行为,避免页面刷新
     e.preventDefault();
 
-    // 添加输入验证
-    if (!description.trim()) {
-      alert("请输入壁纸主题");
-      return;
-    }
-
+    // 先检查登录状态
     if (!isSignedIn && process.env.NEXT_PUBLIC_ENV !== "DEV") {
       const signInButton = document.getElementById("wallpaper-signin-button");
       signInButton?.click();
+      return;
+    }
+
+    // 再检查输入验证
+    if (!description.trim()) {
+      alert("请输入壁纸主题");
       return;
     }
 
