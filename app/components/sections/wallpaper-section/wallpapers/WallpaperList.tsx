@@ -78,14 +78,13 @@ export default function WallpaperList({
                     {/* 用户头像 */}
                     <div className="mr-4 h-10 w-10 rounded-full overflow-hidden">
                       <img
-                        src={wallpaper.user_avatar}
+                        src={wallpaper.user?.avatar_url}
                         alt=""
                         className="h-full w-full object-cover"
                         onError={(e) => {
-                          // 头像加载失败时使用默认头像
                           e.currentTarget.onerror = null;
                           e.currentTarget.src = DefaultAvatar({
-                            seed: wallpaper.user_email || "default",
+                            seed: wallpaper.user?.email || "default",
                             size: 40,
                           });
                         }}
@@ -94,7 +93,7 @@ export default function WallpaperList({
                     {/* 用户名称和创建时间 */}
                     <div className="flex flex-col pt-3">
                       <h6 className="text-base font-bold text-gray-800 dark:text-gray-100">
-                        {wallpaper.user_nickname || "访客用户"}
+                        {wallpaper.user?.nickname || "访客用户"}
                       </h6>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
                         {formatDate(wallpaper.created_at)}

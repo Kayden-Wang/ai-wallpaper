@@ -59,8 +59,20 @@ export default function WallpaperSection() {
         alert("壁纸已存在！");
         return;
       }
-      // 将新壁纸添加到列表开头
-      setWallpapers([newWallpaper, ...wallpapers]);
+      // 将新壁纸添加到列表开头，确保包含完整的用户信息
+      setWallpapers([
+        {
+          ...newWallpaper,
+          created_at: newWallpaper.created_at || new Date().toISOString(),
+          user: newWallpaper.user || {
+            email: "default@example.com",
+            nickname: "访客用户",
+            avatar_url:
+              "https://api.dicebear.com/7.x/personas/svg?seed=default",
+          },
+        },
+        ...wallpapers,
+      ]);
     } catch (error) {
       console.error("添加壁纸失败:", error);
     }

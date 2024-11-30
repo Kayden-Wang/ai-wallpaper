@@ -68,7 +68,6 @@ export async function POST(req: Request) {
         style: "natural",
         prompt: `生成一张桌面壁纸，主题为: ${description}, 印象派风格，受莫奈《睡莲》启发`,
       },
-      user_email: "default@example.com", // 后续可以从用户会话中获取
     };
 
     const savedWallpaper = await SupabaseService.insertWallpaper(wallpaperData);

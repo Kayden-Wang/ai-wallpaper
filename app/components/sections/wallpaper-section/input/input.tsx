@@ -59,6 +59,11 @@ export default function Input({ onAddWallpaper }: InputProps) {
       await onAddWallpaper({
         description: data.data.description,
         img_url: data.data.img_url,
+        created_at: data.data.created_at,
+        user: data.data.user,
+        img_size: data.data.img_size,
+        model_used: data.data.model_used,
+        model_parameters: data.data.model_parameters,
       });
     } catch (error) {
       // 捕获并打印错误信息
