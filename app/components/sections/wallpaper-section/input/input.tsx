@@ -41,8 +41,7 @@ export default function Input({ onAddWallpaper }: InputProps) {
       return;
     }
 
-    if (!isSignedIn) {
-      // 使用 SignInButton 的引用来触发登录
+    if (!isSignedIn && process.env.NEXT_PUBLIC_ENV !== "DEV") {
       const signInButton = document.getElementById("wallpaper-signin-button");
       signInButton?.click();
       return;

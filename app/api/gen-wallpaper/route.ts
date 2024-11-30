@@ -7,8 +7,9 @@ import { SupabaseService } from "@/app/service/supabase";
 // 定义 POST 请求处理函数
 export async function POST(req: Request) {
   const { userId } = await auth();
+  const isDev = process.env.NEXT_PUBLIC_ENV === "DEV";
 
-  if (!userId) {
+  if (!userId && !isDev) {
     return NextResponse.json(
       { code: 401, message: "Unauthorized" },
       { status: 401 }
@@ -66,17 +67,25 @@ export async function POST(req: Request) {
       fileName
     );
 
-    // 获取 Clerk 用户信息
-    const user = await currentUser();
-
-    // 准备用户数据
-    const userData = {
-      email: user?.emailAddresses[0]?.emailAddress || "",
-      nickname: user?.firstName || user?.username || "用户",
-      avatar_url:
-        user?.imageUrl ||
-        `https://api.dicebear.com/7.x/personas/svg?seed=${userId}`,
-    };
+    // 获取用户信息
+    let userData;
+    if (userId) {
+      const user = await currentUser();
+      userData = {
+        email: user?.emailAddresses[0]?.emailAddress || "",
+        nickname: user?.firstName || user?.username || "用户",
+        avatar_url:
+          user?.imageUrl ||
+          `https://api.dicebear.com/7.x/personas/svg?seed=${userId}`,
+      };
+    } else {
+      // 使用默认用户信息
+      userData = {
+        email: "default@example.com",
+        nickname: "访客用户",
+        avatar_url: "https://api.dicebear.com/7.x/personas/svg?seed=default",
+      };
+    }
 
     // 修改保存壁纸的逻辑
     const wallpaperData = {
@@ -90,8 +99,8 @@ export async function POST(req: Request) {
         style: "natural",
         prompt: `生成一张桌面壁纸，主题为: ${description}, 印象派风格，受莫奈《睡莲》启发`,
       },
-      user_id: userId, // 添加用户ID
-      user: userData, // 添加用户信息
+      user_id: userId || "default",
+      user: userData,
     };
 
     const savedWallpaper = await SupabaseService.insertWallpaper(wallpaperData);
